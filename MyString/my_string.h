@@ -40,6 +40,9 @@ class MyString {
   size_t capacity() const;
   char at(int n) const;
 
+  void print() const;
+  void println() const;
+
   MyString& Reserve(size_t cap);
   MyString& Assign(const MyString& str);
   MyString& Assign(const char* str);
@@ -47,9 +50,9 @@ class MyString {
   MyString& Insert(int pos, const char* str);
   MyString& Insert(int pos, char c);
   MyString& Erase(int pos, int n);
-  size_t Find(int pos, const MyString& str) const;
-  size_t Find(int pos, const char* str) const;
-  size_t Find(int pos, char c) const;
+  int Find(int pos, const MyString& str) const;
+  int Find(int pos, const char* str) const;
+  int Find(int pos, char c) const;
   int Compare(const MyString& str) const;
 
  private:

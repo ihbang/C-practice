@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <iostream>
 #include <new>
 
 // return string length
@@ -27,13 +28,26 @@ char MyString::at(int n) const {
     return c_str_[n];
 }
 
+void MyString::print() const {
+  for (int i = 0; i < length_; ++i) {
+    std::cout << c_str_[i];
+  }
+}
+
+void MyString::println() const {
+  for (int i = 0; i < length_; ++i) {
+    std::cout << c_str_[i];
+  }
+  std::cout << std::endl;
+}
+
 // if a capacity of string is larger than requested length, do nothing
 // else reallocate memory fit to len
 MyString& MyString::Reserve(size_t cap) {
   if (capacity_ < cap) {
     char* prev_c_str = c_str_;
-    cap = std::max(cap, 2 * capacity_);
     c_str_ = new char[cap];
+    capacity_ = cap;
 
     for (int i = 0; i < length_; ++i) {
       c_str_[i] = prev_c_str[i];
@@ -43,6 +57,7 @@ MyString& MyString::Reserve(size_t cap) {
   return *this;
 }
 
+// replace string with new string
 MyString& MyString::Assign(const MyString& str) {
   size_t len = str.length();
 
@@ -50,6 +65,7 @@ MyString& MyString::Assign(const MyString& str) {
     size_t cap = std::max(len, 2 * capacity_);
     delete[] c_str_;
     c_str_ = new char[cap];
+    capacity_ = cap;
   }
 
   for (int i = 0; i < len; ++i) {
@@ -66,6 +82,7 @@ MyString& MyString::Assign(const char* str) {
   return Assign(tmp);
 }
 
+// insert characters into middle of the string
 MyString& MyString::Insert(int pos, const MyString& str) {
   char* prev_c_str = c_str_;
   size_t len = length_ + str.length();
@@ -73,6 +90,7 @@ MyString& MyString::Insert(int pos, const MyString& str) {
   if (capacity_ < len) {
     size_t cap = std::max(len, 2 * capacity_);
     c_str_ = new char[cap];
+    capacity_ = cap;
   }
 
   for (int i = length_ - 1; i >= pos; --i) {
@@ -98,12 +116,137 @@ MyString& MyString::Insert(int pos, char c) {
   return Insert(pos, c);
 }
 
-MyString& MyString::Erase(int pos, int n) {}
+// erase n characters from pos
+MyString& MyString::Erase(int pos, int n) {
+  if (pos < 0 || n < 1 || pos + n > length_) {
+    std::cout << "ERROR: Invalid position or length (MyString::Erase), pos="
+              << pos << "length=" << n << std::endl;
+  } else {
+    for (int i = pos + n; i < length_; ++i) {
+      c_str_[i - n] = c_str_[i];
+    }
+    length_ -= n;
+  }
+  return *this;
+}
 
-size_t MyString::Find(int pos, const MyString& str) const {}
+// maximum length of prefix equivalent to suffix
+int* KmpFailFunc(const MyString& str) {
+  int i = 1, j = 0;
+  size_t len = str.length();
+  int* fail_func = new int[len];
 
-size_t MyString::Find(int pos, const char* str) const {}
+  fail_func[0] = 0;
+  while (i < len) {
+    while (j == 0 && str.at(i) != str.at(j)) {
+      fail_func[i++] = 0;
+    }
+    if (str.at(i) != str.at(j)) {
+      j = fail_func[j - 1];
+    } else {
+      fail_func[i++] = ++j;
+    }
+  }
+  fail_func[0] = -1;
+  return fail_func;
+}
 
-size_t MyString::Find(int pos, char c) const {}
+// find substring with KMP algorithm
+int MyString::Find(const int pos, const MyString& str) const {
+  if (pos < 0 || pos >= length_) {
+    std::cout << "ERROR: Invalid position (MyString::Find), pos=" << pos
+              << std::endl;
+    return -1;
+  }
+  int* fail_func = KmpFailFunc(str);
+  int i = pos, j = 0;
 
-int MyString::Compare(const MyString& str) const {}
+  while (c_str_[i] != str.at(0)) i++;
+
+  while (i < length_) {
+    while (j > 0 && c_str_[i] != str.at(j)) {
+      j = fail_func[j - 1];
+    }
+    if (c_str_[i] == str.at(j)) {
+      if (j == str.length() - 1) {
+        return i - str.length() + 1;
+      } else {
+        i++;
+        j++;
+      }
+    } else {
+      i++;
+    }
+  }
+  return -1;
+}
+
+int MyString::Find(int pos, const char* str) const {
+  MyString tmp(str);
+
+  return Find(pos, str);
+}
+
+int MyString::Find(int pos, char c) const {
+  MyString tmp(c);
+
+  return Find(pos, c);
+}
+
+int MyString::Compare(const MyString& str) const {
+  for (int i = 0; i < std::min(length_, str.length()); ++i) {
+    if (c_str_[i] != str.at(i)) return c_str_[i] - str.at(i);
+  }
+  return length_ - str.length();
+}
+
+int main() {
+  std::cout << "Test case #1" << std::endl;
+  MyString str1("hello world!");
+  MyString str2(str1);
+
+  str1.println();
+  str2.println();
+
+  std::cout << "\nTest case #2" << std::endl;
+  str1.Reserve(20);
+
+  std::cout << "Capacity : " << str1.capacity() << std::endl;
+  std::cout << "String length : " << str1.length() << std::endl;
+  str1.println();
+
+  std::cout << "\nTest case #3" << std::endl;
+  str1.Assign("very very very long string");
+
+  std::cout << "Capacity : " << str1.capacity() << std::endl;
+  std::cout << "String length : " << str1.length() << std::endl;
+  str1.println();
+
+  std::cout << "\nTest case #4" << std::endl;
+  str1.Insert(5, "long but not ");
+
+  std::cout << "Capacity : " << str1.capacity() << std::endl;
+  std::cout << "String length : " << str1.length() << std::endl;
+  str1.println();
+
+  std::cout << "\nTest case #5" << std::endl;
+  str1.Erase(18, 5);
+
+  std::cout << "Capacity : " << str1.capacity() << std::endl;
+  std::cout << "String length : " << str1.length() << std::endl;
+  str1.println();
+
+  std::cout << "\nTest case #6" << std::endl;
+  int idx1 = str1.Find(0, "very");
+  int idx2 = str1.Find(idx1 + 1, "very");
+  int idx3 = str1.Find(idx2 + 1, "very");
+
+  std::cout << idx1 << " " << idx2 << " " << idx3 << std::endl;
+
+  std::cout << "\nTest case #7" << std::endl;
+  MyString str3(str1);
+  MyString str4("very very very very");
+
+  std::cout << str1.Compare(str2) << " " << str1.Compare(str3) << " "
+            << str1.Compare(str4) << std::endl;
+}
