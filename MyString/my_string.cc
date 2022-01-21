@@ -86,11 +86,13 @@ MyString& MyString::Assign(const char* str) {
 MyString& MyString::Insert(int pos, const MyString& str) {
   char* prev_c_str = c_str_;
   size_t len = length_ + str.length();
+  bool realloced = false;
 
   if (capacity_ < len) {
     size_t cap = std::max(len, 2 * capacity_);
     c_str_ = new char[cap];
     capacity_ = cap;
+    realloced = true;
   }
 
   for (int i = length_ - 1; i >= pos; --i) {
@@ -99,7 +101,8 @@ MyString& MyString::Insert(int pos, const MyString& str) {
   for (int i = 0; i < str.length(); ++i) {
     c_str_[pos + i] = str.at(i);
   }
-  delete[] prev_c_str;
+  length_ = len;
+  if (realloced) delete[] prev_c_str;
 
   return *this;
 }
@@ -138,10 +141,9 @@ int* KmpFailFunc(const MyString& str) {
 
   fail_func[0] = 0;
   while (i < len) {
-    while (j == 0 && str.at(i) != str.at(j)) {
+    if (j == 0 && str.at(i) != str.at(j)) {
       fail_func[i++] = 0;
-    }
-    if (str.at(i) != str.at(j)) {
+    } else if (str.at(i) != str.at(j)) {
       j = fail_func[j - 1];
     } else {
       fail_func[i++] = ++j;
@@ -184,13 +186,13 @@ int MyString::Find(const int pos, const MyString& str) const {
 int MyString::Find(int pos, const char* str) const {
   MyString tmp(str);
 
-  return Find(pos, str);
+  return Find(pos, tmp);
 }
 
 int MyString::Find(int pos, char c) const {
   MyString tmp(c);
 
-  return Find(pos, c);
+  return Find(pos, tmp);
 }
 
 int MyString::Compare(const MyString& str) const {
