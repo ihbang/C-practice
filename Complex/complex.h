@@ -76,25 +76,15 @@ class Complex {
   double real() const { return real_; }
   double img() const { return img_; }
 
-  Complex operator+(const Complex& c) const;
-  Complex operator-(const Complex& c) const;
-  Complex operator*(const Complex& c) const;
-  Complex operator/(const Complex& c) const;
-
-  Complex operator+(const char* c) const;
-  Complex operator-(const char* c) const;
-  Complex operator*(const char* c) const;
-  Complex operator/(const char* c) const;
-
   Complex& operator+=(const Complex& c);
   Complex& operator-=(const Complex& c);
   Complex& operator*=(const Complex& c);
   Complex& operator/=(const Complex& c);
 
-  Complex& operator+=(const char* c);
-  Complex& operator-=(const char* c);
-  Complex& operator*=(const char* c);
-  Complex& operator/=(const char* c);
+  friend Complex operator+(const Complex& a, const Complex& b);
+  friend Complex operator-(const Complex& a, const Complex& b);
+  friend Complex operator*(const Complex& a, const Complex& b);
+  friend Complex operator/(const Complex& a, const Complex& b);
 
   void println() {
     std::cout << "(" << real_ << ", " << img_ << ")" << std::endl;
@@ -104,5 +94,10 @@ class Complex {
   double real_;
   double img_;
 };
+
+Complex operator+(const Complex& a, const Complex& b);
+Complex operator-(const Complex& a, const Complex& b);
+Complex operator*(const Complex& a, const Complex& b);
+Complex operator/(const Complex& a, const Complex& b);
 
 #endif  // COMPLEX_H_

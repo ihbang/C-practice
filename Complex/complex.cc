@@ -8,50 +8,6 @@
 
 #include "complex.h"
 
-Complex Complex::operator+(const Complex& c) const {
-  Complex tmp(real_ + c.real(), img_ + c.img());
-  return tmp;
-}
-
-Complex Complex::operator-(const Complex& c) const {
-  Complex tmp(real_ - c.real(), img_ - c.img());
-  return tmp;
-}
-
-Complex Complex::operator*(const Complex& c) const {
-  Complex tmp(real_ * c.real() - img_ * c.img(),
-              real_ * c.img() + img_ * c.real());
-  return tmp;
-}
-
-Complex Complex::operator/(const Complex& c) const {
-  Complex tmp((real_ * c.real() + img_ * c.img()) /
-                  (c.real() * c.real() + c.img() * c.img()),
-              (img_ * c.real() - real_ * c.img()) /
-                  (c.real() * c.real() + c.img() * c.img()));
-  return tmp;
-}
-
-Complex Complex::operator+(const char* c) const {
-  Complex tmp(c);
-  return *this + tmp;
-}
-
-Complex Complex::operator-(const char* c) const {
-  Complex tmp(c);
-  return *this - tmp;
-}
-
-Complex Complex::operator*(const char* c) const {
-  Complex tmp(c);
-  return *this * tmp;
-}
-
-Complex Complex::operator/(const char* c) const {
-  Complex tmp(c);
-  return *this / tmp;
-}
-
 Complex& Complex::operator+=(const Complex& c) {
   *this = *this + c;
 
@@ -76,28 +32,28 @@ Complex& Complex::operator/=(const Complex& c) {
   return *this;
 }
 
-Complex& Complex::operator+=(const char* c) {
-  Complex tmp(c);
-  *this = *this + tmp;
-  return *this;
+Complex operator+(const Complex& a, const Complex& b) {
+  Complex tmp(a.real_ + b.real_, a.img_ + b.img_);
+  return tmp;
 }
 
-Complex& Complex::operator-=(const char* c) {
-  Complex tmp(c);
-  *this = *this - tmp;
-  return *this;
+Complex operator-(const Complex& a, const Complex& b) {
+  Complex tmp(a.real_ - b.real_, a.img_ - b.img_);
+  return tmp;
 }
 
-Complex& Complex::operator*=(const char* c) {
-  Complex tmp(c);
-  *this = *this * tmp;
-  return *this;
+Complex operator*(const Complex& a, const Complex& b) {
+  Complex tmp(a.real_ * b.real_ - a.img_ * b.img_,
+              a.real_ * b.img_ + a.img_ * b.real_);
+  return tmp;
 }
 
-Complex& Complex::operator/=(const char* c) {
-  Complex tmp(c);
-  *this = *this / tmp;
-  return *this;
+Complex operator/(const Complex& a, const Complex& b) {
+  Complex tmp((a.real_ * b.real_ + a.img_ * b.img_) /
+                  (b.real_ * b.real_ + b.img_ * b.img_),
+              (a.img_ * b.real_ - a.real_ * b.img_) /
+                  (b.real_ * b.real_ + b.img_ * b.img_));
+  return tmp;
 }
 
 int main() {
