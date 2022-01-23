@@ -19,7 +19,7 @@ class Complex {
   Complex(double real, double img) : real_(real), img_(img) {}
 
   // init Complex object with string which has "a + bi" form
-  explicit Complex(const char* c) : real_(0), img_(0) {
+  Complex(const char* c) : real_(0), img_(0) {
     int16_t pos = INT16_MAX;
     bool has_img = false;
     std::string str(c);
@@ -76,19 +76,17 @@ class Complex {
   double real() const { return real_; }
   double img() const { return img_; }
 
-  Complex& operator+=(const Complex& c);
-  Complex& operator-=(const Complex& c);
-  Complex& operator*=(const Complex& c);
-  Complex& operator/=(const Complex& c);
-
   friend Complex operator+(const Complex& a, const Complex& b);
   friend Complex operator-(const Complex& a, const Complex& b);
   friend Complex operator*(const Complex& a, const Complex& b);
   friend Complex operator/(const Complex& a, const Complex& b);
 
-  void println() {
-    std::cout << "(" << real_ << ", " << img_ << ")" << std::endl;
-  }
+  Complex& operator+=(const Complex& c);
+  Complex& operator-=(const Complex& c);
+  Complex& operator*=(const Complex& c);
+  Complex& operator/=(const Complex& c);
+
+  friend std::ostream& operator<<(std::ostream& os, const Complex& c);
 
  private:
   double real_;
