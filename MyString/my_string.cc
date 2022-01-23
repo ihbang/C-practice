@@ -14,6 +14,8 @@
 #include <iostream>
 #include <new>
 
+char& MyString::operator[](const int idx) { return c_str_[idx]; }
+
 // return string length
 size_t MyString::length() const { return length_; }
 

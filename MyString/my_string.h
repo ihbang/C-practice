@@ -36,6 +36,8 @@ class MyString {
     }
   }
 
+  char& operator[](const int idx);
+
   size_t length() const;
   size_t capacity() const;
   char at(int n) const;
