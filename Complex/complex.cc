@@ -54,6 +54,7 @@ Complex& Complex::operator/=(const Complex& c) {
 
 std::ostream& operator<<(std::ostream& os, const Complex& c) {
   os << "(" << c.real_ << ", " << c.img_ << ")" << std::endl;
+  return os;
 }
 
 int main() {
@@ -63,19 +64,12 @@ int main() {
   Complex c4("2i-4");
   Complex c5("2.1");
 
-  std::cout << c1;
-  std::cout << c2;
-  std::cout << c3;
-  std::cout << c4;
-  std::cout << c5;
+  std::cout << c1 << c2 << c3 << c4 << c5;
 
   c2 += "1-4i";
   c3 -= "i+3";
   c4 *= "i";
   c5 /= "2.1i";
 
-  std::cout << c2;
-  std::cout << c3;
-  std::cout << c4;
-  std::cout << c5;
+  std::cout << c2 << c3 << c4 << c5;
 }
