@@ -6,8 +6,8 @@
  * @reference https://modoocode.com/198
  */
 
-#ifndef COMPLEX_H_
-#define COMPLEX_H_
+#ifndef CPP_PRACTICE_COMPLEX_H_
+#define CPP_PRACTICE_COMPLEX_H_
 
 #include <cmath>
 #include <cstdlib>
@@ -98,4 +98,4 @@ Complex operator-(const Complex& a, const Complex& b);
 Complex operator*(const Complex& a, const Complex& b);
 Complex operator/(const Complex& a, const Complex& b);
 
-#endif  // COMPLEX_H_
+#endif  // CPP_PRACTICE_COMPLEX_H_

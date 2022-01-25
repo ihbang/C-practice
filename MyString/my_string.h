@@ -6,8 +6,8 @@
  * @reference https://modoocode.com/198
  */
 
-#ifndef MY_STRING_H_
-#define MY_STRING_H_
+#ifndef CPP_PRACTICE_MY_STRING_H_
+#define CPP_PRACTICE_MY_STRING_H_
 
 #include <cstring>
 
@@ -63,4 +63,4 @@ class MyString {
   size_t capacity_;
 };
 
-#endif  // MY_STRING_H_
+#endif  // CPP_PRACTICE_MY_STRING_H_
